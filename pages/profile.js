@@ -2,6 +2,7 @@ import Link from "next/link";
 import {useEffect, useState} from "react";
 import { useSelector} from "react-redux";
 import useAxiosPrivate from "../lib/hooks/useAxiosPrivate";
+import Icon from "../components/Icon";
 
 
 const Profile = () => {
@@ -49,15 +50,17 @@ const Profile = () => {
               <p className={" mb-1"}>
                   Share link for people to leave cute messages for you
               </p>
-             <div className={"flex justify-between"}>
+             <div className={"flex justify-between items-center"}>
                  <span>{url}</span>
-                 <span onClick={handleCopy} className={"material-symbols-rounded h-8 w-8 cursor-pointer"}>content_copy</span>
+                 <span onClick={handleCopy} className={"h-6 w-6 flex justify-center items-center cursor-pointer"}>
+                     <Icon name={"content_copy"}/>
+                 </span>
              </div>
           </div>
           <Link href={'/messages'}>
               <div className={"profile-btn messages"}>
                   <div className={"relative mr-2"}>
-                      <span className={"material-symbols-rounded material"}>notifications</span>
+                      <Icon name={"notifications"}/>
                       <span className={"absolute h-5 w-5 flex items-center justify-center z-30 right-0 top-0 bg-pink-400 p-2 rounded-full text-sm"}>{messageCount}</span>
                       <span className={"absolute h-5 w-5 right-0 z-20 top-0 bg-pink-400 rounded-full animate-ping"}></span>
                   </div>
@@ -68,16 +71,14 @@ const Profile = () => {
           </Link>
           <Link href={"/settings"}>
               <div className={"settings profile-btn"}>
-                  <span className={"material-symbols-rounded material"}>settings</span>
+                  <Icon name={"settings"}/>
                   <span className={"text-xl font-medium"}>
                       Settings
                   </span>
               </div>
           </Link>
               <div className={"profile-btn logout text-zinc-700"}>
-                  <span className="material-symbols-rounded material">
-                      logout
-                  </span>
+                  <Icon name={"logout"}/>
                   <span className={"text-xl font-medium"}>
                       Logout
                   </span>
