@@ -1,0 +1,51 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components{
+    .input {
+        @apply w-full bg-zinc-700 px-4 block py-2 rounded-md text-zinc-300 border border-neutral-500 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400;
+    }
+    .btn {
+        @apply h-10 bg-cyan-500 w-[200px] text-zinc-900 text-xl flex justify-center items-center rounded-sm;
+    }
+    .material{
+        @apply h-10 w-10 text-3xl flex items-center justify-center
+    }
+    .profile-btn{
+        @apply h-20 rounded-md flex items-center justify-center cursor-pointer mb-5
+    }
+    .settings{
+        @apply  bg-gradient-to-tr from-[#B892FF] to-[#6E44FF]
+    }
+    .messages{
+        @apply bg-gradient-to-tr from-emerald-300 to-sky-500
+    }
+    .logout{
+        @apply bg-gradient-to-tr from-[#E0FF4F] to-[#F9B9B7]
+    }
+}
+
+@layer utilities {
+    .scrollbar::-webkit-scrollbar {
+        width: 10px;
+        height: 5px;
+    }
+
+    .scrollbar::-webkit-scrollbar-track {
+        border-radius: 100vh;
+        background: rgba(161, 161, 170, 0.25);
+    }
+
+    .scrollbar::-webkit-scrollbar-thumb {
+        background: rgb(79, 162, 255);
+        border-radius: 100vh;
+    }
+
+    .scrollbar::-webkit-scrollbar-thumb:hover {
+        background: rgb(134, 190, 255);
+    }
+    .scrollbar-hidden::-webkit-scrollbar {
+        display: none;
+    }
+}
