@@ -4,13 +4,15 @@ import {useState} from "react";
 
 const UserPage = ({username, available, userId}) => {
     const [content, setContent] = useState("")
-  // const router = useRouter()
+    const router = useRouter()
   // const {user} = router.query
     const handleSubmit = async (e) => {
         e.preventDefault()
-        const res = await axios.post('/messages', {
+        await axios.post('/messages', {
             user_id: userId,
             content
+        }).then((res)=>{
+            router.push('/')
         })
         console.log(res)
     }
