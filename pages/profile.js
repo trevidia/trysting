@@ -24,7 +24,7 @@ const Profile = () => {
                 console.log(response.data)
                 const {unReadMessages, username} = response.data
                 console.log(user)
-                isMounted && setUrl(`${process.env.APP_URL}/${username}`)
+                isMounted && setUrl(`${process.env.NEXT_PUBLIC_APP_URL}/${username}`)
                 isMounted && setMessageCount(unReadMessages)
             } catch (err){
                 console.error(err)
