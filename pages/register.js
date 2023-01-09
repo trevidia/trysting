@@ -1,15 +1,29 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import Link from "next/link";
 import BackButton from "../components/BackButton";
+import {useDispatch, useSelector} from "react-redux";
+import {authRegister} from "../redux/features/auth/authSlice";
+import {useRouter} from "next/router";
 
 const Register = () => {
     const [email, setEmail] = useState("")
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
+    const dispatch = useDispatch()
+    const auth = useSelector(state => state.auth)
+    const router = useRouter()
+
+    useEffect(()=>{
+        if (auth.user){
+            router.push('/profile')
+        }
+    }, [auth])
+
     return (
         <div className={"w-full overflow-y-auto scrollbar"}>
             <form onSubmit={(e)=>{
                 e.preventDefault()
+                dispatch(authRegister({email, username, password}))
             }}>
                 <BackButton/>
                 <h3 className={"text-3xl text-center mb-5"}>Register</h3>
@@ -49,6 +63,7 @@ const Register = () => {
                 <button className={'btn w-full'}>
                     Submit
                 </button>
+                {auth.error && <div className={"text-center mt-1.5 text-red-500"}>{auth.error}</div>}
             </form>
         </div>
     )
