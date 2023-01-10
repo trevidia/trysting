@@ -14,7 +14,6 @@ const UserPage = ({username, available, userId}) => {
         }).then((res)=>{
             router.push('/')
         })
-        console.log(res)
     }
   return (
       <div className={"w-9/12"}>

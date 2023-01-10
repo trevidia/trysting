@@ -5,7 +5,7 @@ import CorsMiddleware from "../../middlewares/corsMiddleware";
 const refresh = async (req, res) => {
     try {
         const refreshToken = req.cookies.refreshToken
-        console.log(refreshToken)
+        console.log(refreshToken, 'refresh')
         if (!refreshToken) return res.status(401).json({message: "Not authenticated"})
 
         const user = await prisma.user.findFirst({
@@ -19,6 +19,7 @@ const refresh = async (req, res) => {
             }
 
         })
+        console.log(user)
         if(!user) return res.status(403).json({message: "Not authenticated"})
 
         await jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, decoded)=>{

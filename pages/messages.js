@@ -5,6 +5,7 @@ import useAxiosPrivate from "../lib/hooks/useAxiosPrivate";
 import BackButton from "../components/BackButton";
 import Message from "../components/Message";
 import {console} from "next/dist/compiled/@edge-runtime/primitives/console";
+import Spinner from "../components/Spinner";
 
 
 const Messages = () => {
@@ -12,6 +13,7 @@ const Messages = () => {
     const axiosPrivate = useAxiosPrivate()
     const dispatch = useDispatch()
     const [readMsgList, setReadMsgList] = useState([])
+    const [loading, setLoading] = useState(true)
 
 
     useEffect(()=>{
@@ -20,12 +22,14 @@ const Messages = () => {
 
         const getMessages = async ()=>{
             try {
+                setLoading(true)
                 const response = await axiosPrivate.get('/users/my_messages', {
                     signal: controller.signal
                 })
-
+                setLoading(false)
                 isMounted && dispatch(setMessages({messages: response.data.messages.reverse()}))
             } catch (err){
+                setLoading(false)
                 console.error(err)
             }
         }
@@ -83,6 +87,8 @@ const Messages = () => {
         }
     }, [readMsgList])
 
+    if (loading) return <Spinner/>
+
 
   return (
       <div className={"w-9/12 h-full"}>
@@ -95,7 +101,7 @@ const Messages = () => {
                       const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"]
                       const date = new Date(msg.created_at)
                       const minute = date.getMinutes().toString()
-                      return <Message key={id} msg={msg} readCallback={(read)=> {setReadMsgList(prevState => [...prevState, read])}} date={`${date.getDay()} ${months[date.getMonth()]} ${date.getFullYear()} ${date.getHours()}:${minute.length === 1 ? "0" + minute : minute}`}/>
+                      return <Message key={id} msg={msg} readCallback={(read)=> {setReadMsgList(prevState => [...prevState, read])}} date={`${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()} ${date.getHours()}:${minute.length === 1 ? "0" + minute : minute}`}/>
                   })
               }
           </div>

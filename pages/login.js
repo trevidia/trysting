@@ -4,6 +4,7 @@ import BackButton from "../components/BackButton";
 import {useRouter} from "next/router";
 import {useDispatch, useSelector} from "react-redux";
 import {authLogin} from "../redux/features/auth/authSlice";
+import Spinner from "../components/Spinner";
 
 const Login = () => {
     const [username, setUsername] = useState("")
@@ -18,6 +19,8 @@ const Login = () => {
         }
     }, [auth.user])
 
+    if (auth.user) return <Spinner/>
+
     return (
         <div className={"w-full "}>
             <BackButton/>
@@ -26,6 +29,9 @@ const Login = () => {
                 console.log({username, password})
                 dispatch(authLogin({username, password}))
             }}>
+                {
+                    auth.loading && <Spinner/>
+                }
                 <h3 className={"text-3xl text-center mb-5"}>Login</h3>
                 <div className={"flex flex-col w-full mb-5"}>
                 <span className={"text-xl mb-3"}>
@@ -64,3 +70,23 @@ const Login = () => {
 }
 
 export default Login
+
+// export const getServerSideProps = ({req}) => {
+//     const {isLoggedIn} = req.cookies
+//     console.log(isLoggedIn, "logged in")
+//
+//     if (isLoggedIn){
+//         return {
+//             redirect: {
+//                 destination: '/profile',
+//                 permanent: false
+//             }
+//         }
+//     }
+//
+//     return {
+//         props: {
+//
+//         }
+//     }
+// }
