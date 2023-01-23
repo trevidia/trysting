@@ -41,14 +41,8 @@ export default async function handler(req, res) {
                 username: true
             }
         })
-        console.log(user, process.env.REFRESH_TOKEN_SECRET)
 
-        // function creates the tokens and stores them in the database
-        const {refreshToken, accessToken } = await createTokens({user: user}, user.id)
-
-        res.setHeader('Set-Cookie', `refreshToken=${refreshToken}; Max-Age=${24 * 60 * 60}; HttpOnly`)
-
-        res.status(201).json({ user, accessToken})
+        res.status(201).json({ user})
     } catch (err){
         res.status(500).json({message: err.message})
     }

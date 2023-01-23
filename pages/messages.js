@@ -2,51 +2,23 @@ import {useDispatch, useSelector} from "react-redux";
 import {useEffect, useState} from "react";
 import {setMessages, setReadMessages} from "../redux/features/messages/messageSlice";
 import useAxiosPrivate from "../lib/hooks/useAxiosPrivate";
+import axios from "../lib/axios";
 import BackButton from "../components/BackButton";
 import Message from "../components/Message";
 import {console} from "next/dist/compiled/@edge-runtime/primitives/console";
 import Spinner from "../components/Spinner";
+import {getSession} from "next-auth/react";
+import {getCookie} from "../lib/utils";
 
 
-const Messages = () => {
-    const messages = useSelector(state => state.messages.messages)
-    const axiosPrivate = useAxiosPrivate()
+const Messages = ({messages}) => {
     const dispatch = useDispatch()
     const [readMsgList, setReadMsgList] = useState([])
-    const [loading, setLoading] = useState(true)
 
 
     useEffect(()=>{
         let isMounted = true;
         const controller = new AbortController()
-
-        const getMessages = async ()=>{
-            try {
-                setLoading(true)
-                const response = await axiosPrivate.get('/users/my_messages', {
-                    signal: controller.signal
-                })
-                setLoading(false)
-                isMounted && dispatch(setMessages({messages: response.data.messages.reverse()}))
-            } catch (err){
-                setLoading(false)
-                console.error(err)
-            }
-        }
-        // console.log(messages)
-        getMessages()
-
-        return ()=>{
-            isMounted = false
-            controller.abort()
-        }
-
-    },[])
-
-    useEffect(()=>{
-        let isMounted = true;
-        const controller = new AbortController()
-        console.log(readMsgList, "msg list")
 
         const getIds = (msgList)=>{
             let ids = []
@@ -66,9 +38,10 @@ const Messages = () => {
 
 
            try {
-               const response = await axiosPrivate.post('/messages/mark_read', data, {
+               const response = await axios.post('/messages/mark_read', data, {
                    signal: controller.signal
                })
+               console.log(response)
                if (response && isMounted){
                    dispatch(setReadMessages({readMessages: readMsgList}))
                }
@@ -86,8 +59,6 @@ const Messages = () => {
             controller.abort()
         }
     }, [readMsgList])
-
-    if (loading) return <Spinner/>
 
 
   return (
@@ -111,3 +82,30 @@ const Messages = () => {
 }
 
 export default Messages
+
+export const getServerSideProps = async ({req}) => {
+    const session = await getSession({req})
+    const cookie = getCookie(req)
+
+    console.log(session)
+    if (session === null){
+        return {
+            redirect: {
+                destination: '/login',
+                permanent: false
+            }
+        }
+    }
+
+    const res = await axios.get('/users/my_messages', {
+        headers: {
+            Cookie: cookie
+        }
+    })
+
+    return {
+        props: {
+            messages: res?.data?.messages.reverse()
+        }
+    }
+}

@@ -4,6 +4,8 @@ import BackButton from "../components/BackButton";
 import {useDispatch, useSelector} from "react-redux";
 import {authRegister} from "../redux/features/auth/authSlice";
 import {useRouter} from "next/router";
+import axios from "../lib/axios";
+import {getSession, signIn} from "next-auth/react";
 
 const Register = () => {
     const [email, setEmail] = useState("")
@@ -14,9 +16,16 @@ const Register = () => {
     const router = useRouter()
 
     useEffect(()=>{
-        if (auth.user){
-            router.push('/profile')
+        const login = async () => {
+            if (auth.user) {
+                const result = await signIn("credentials", {username, password, redirect: false})
+                console.log(result)
+                if (!result.error) {
+                    router.push('/profile')
+                }
+            }
         }
+        login()
     }, [auth])
 
     return (
@@ -70,3 +79,21 @@ const Register = () => {
 }
 
 export default Register
+
+export const getServerSideProps = async ({req}) => {
+    const session = await getSession({req})
+
+    console.log(session)
+    if (session !== null){
+        return {
+            redirect: {
+                destination: '/profile',
+                permanent: false
+            }
+        }
+    }
+
+    return {
+        props: {}
+    }
+}

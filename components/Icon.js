@@ -1,7 +1,7 @@
-const Icon = ({name})=>{
+const Icon = ({name, className})=>{
     return (
         <div className={"material"}>
-            <span className={"material-symbols-rounded"}>
+            <span className={"material-symbols-rounded " + className }>
                 {name}
             </span>
         </div>

@@ -1,4 +1,5 @@
 import prisma from "../../../lib/prisma";
+import {getSession} from "next-auth/react";
 
 const createMessage = async (req, res) => {
     try {

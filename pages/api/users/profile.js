@@ -1,9 +1,13 @@
 import verifyJwt from "../../../middlewares/verifyJwt";
 import prisma from "../../../lib/prisma";
+import {getSession} from "next-auth/react";
 
 
 const profile = async (req, res) => {
-    const user = req.auth.user
+    const session = await getSession({req})
+    console.log(session, "profile")
+    if (!session) return res.status(401).json({message: "not authenticated"})
+    const user = session.user
     const messageCount = await prisma.message.count({
         where: {
             read: false,
@@ -14,4 +18,4 @@ const profile = async (req, res) => {
 
 }
 
-export default verifyJwt(profile)
+export default profile
