@@ -80,9 +80,6 @@ const Settings = () => {
                     }
                     <div className={'w-9/12'}>
                         <BackButton/>
-                        {
-                            loading && <Spinner/>
-                        }
                         <h3 className={"text-3xl text-center mb-5"}>
                             Settings
                         </h3>

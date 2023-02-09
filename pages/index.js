@@ -5,12 +5,9 @@ const Home = () => {
     return (
             <div className={"w-[70%] flex items-center flex-col"}>
                 <h2 className={"text-4xl text-center mb-5 font-bold"}>Trysting</h2>
-                <p className={"mb-8"}>Trysting is an anonymous messaging site made by your boy trevidia, it's made for you
-                    youths to be able to
-                    send your nasty ass messages to your damn crushes or enemy's or sneaky links who has multiple
-                    partners
-                    so y'all should register and get started and stop parading around for something else you don't
-                    know</p>
+                <p className={"mb-8"}>Trysting is an anonymous messaging site made by Nwaorgu Uchenna Du/204, due to the cmp 421 course,
+                    it's made for workers and co-workers to leave critics and reviews for each other to better or improve team work in a company.
+                </p>
                 <Link href={'/register'}>
                     <div className={"btn mb-3"}>
                         Register

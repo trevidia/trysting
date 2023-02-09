@@ -23,7 +23,7 @@ const Profile = ({unreadMessages, username}) => {
                 <h4 className={"text-xl text-zinc-400 mb-3"}>Welcome, {username}</h4>
                 <div className={"text-zinc-400 mb-2 "}>
                     <p className={" mb-1"}>
-                        Share link for people to leave cute messages for you
+                        Share link for co workers to leave critics or reviews for you
                     </p>
                     <div className={"flex justify-between items-center"}>
                         <span className={'truncate'}>{`${process.env.NEXT_PUBLIC_APP_URL}/${username}`}</span>
