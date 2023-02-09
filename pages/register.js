@@ -19,7 +19,6 @@ const Register = () => {
         const login = async () => {
             if (auth.user) {
                 const result = await signIn("credentials", {username, password, redirect: false})
-                console.log(result)
                 if (!result.error) {
                     router.push('/profile')
                 }
@@ -83,7 +82,6 @@ export default Register
 export const getServerSideProps = async ({req}) => {
     const session = await getSession({req})
 
-    console.log(session)
     if (session !== null){
         return {
             redirect: {

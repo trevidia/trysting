@@ -22,7 +22,6 @@ export const authOptions = {
                 const result = await bcrypt.compare(password, user.password)
                 if (!result) throw new Error("Invalid Password")
 
-                console.log(username, password)
                 return user
 
             },

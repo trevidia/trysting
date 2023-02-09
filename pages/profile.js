@@ -1,20 +1,20 @@
 import Link from "next/link";
-import {useEffect, useState} from "react";
-import {useDispatch, useSelector} from "react-redux";
-import useAxiosPrivate from "../lib/hooks/useAxiosPrivate";
 import Icon from "../components/Icon";
-import Spinner from "../components/Spinner";
 import {logout} from "../redux/features/auth/authSlice";
 import {useRouter} from "next/router";
 import {getSession, signOut} from "next-auth/react";
 import axios, {axiosPrivate} from "../lib/axios";
 import {getCookie} from "../lib/utils";
+import {toast} from "react-toastify";
 
 
 const Profile = ({unreadMessages, username}) => {
+    const router = useRouter()
 
     const handleCopy = async () => {
-        await navigator.clipboard.writeText(`${process.env.NEXT_PUBLIC_APP_URL}/${username}`)
+        await navigator.clipboard.writeText(`${process.env.NEXT_PUBLIC_APP_URL}/${username}`).then(()=>{
+            toast('Copied', {type: 'default'})
+        })
     }
 
     return (
@@ -26,7 +26,7 @@ const Profile = ({unreadMessages, username}) => {
                         Share link for people to leave cute messages for you
                     </p>
                     <div className={"flex justify-between items-center"}>
-                        <span>{`${process.env.NEXT_PUBLIC_APP_URL}/${username}`}</span>
+                        <span className={'truncate'}>{`${process.env.NEXT_PUBLIC_APP_URL}/${username}`}</span>
                         <span onClick={handleCopy} className={"h-6 w-6 flex justify-center items-center cursor-pointer"}>
                      <Icon name={"content_copy"}/>
                  </span>
@@ -52,7 +52,12 @@ const Profile = ({unreadMessages, username}) => {
                   </span>
                     </div>
                 </Link>
-                <div className={"profile-btn logout text-zinc-700"} onClick={()=> signOut()}>
+                <div className={"profile-btn logout text-zinc-700"} onClick={()=> {
+                    signOut({redirect: false}).then(()=>{
+                        toast("Logged Out Success", {type: "success"})
+                        router.push('/login')
+                    })
+                }}>
                     <Icon name={"logout"}/>
                     <span className={"text-xl font-medium"}>
                       Logout
@@ -67,7 +72,6 @@ export default Profile
 export const getServerSideProps = async ({req}) => {
     const session = await getSession({req})
    const cookie = getCookie(req)
-    console.log(cookie)
 
     if (session === null){
         return {

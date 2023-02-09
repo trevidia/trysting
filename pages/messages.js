@@ -1,7 +1,6 @@
 import {useDispatch, useSelector} from "react-redux";
 import {useEffect, useState} from "react";
 import {setMessages, setReadMessages} from "../redux/features/messages/messageSlice";
-import useAxiosPrivate from "../lib/hooks/useAxiosPrivate";
 import axios from "../lib/axios";
 import BackButton from "../components/BackButton";
 import Message from "../components/Message";
@@ -41,7 +40,6 @@ const Messages = ({messages}) => {
                const response = await axios.post('/messages/mark_read', data, {
                    signal: controller.signal
                })
-               console.log(response)
                if (response && isMounted){
                    dispatch(setReadMessages({readMessages: readMsgList}))
                }
@@ -87,7 +85,6 @@ export const getServerSideProps = async ({req}) => {
     const session = await getSession({req})
     const cookie = getCookie(req)
 
-    console.log(session)
     if (session === null){
         return {
             redirect: {

@@ -18,7 +18,6 @@ const Message = ({msg, date, readCallback}) => {
         if (read && !msg.read){
             readCallback(msg.id)
         }
-        console.log(`message with id: ${msg.id} ${read ? "has been" : "has not been"} read`)
     },[read])
 
     return <div

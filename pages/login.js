@@ -6,6 +6,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {authLogin} from "../redux/features/auth/authSlice";
 import Spinner from "../components/Spinner";
 import {getSession, signIn} from "next-auth/react";
+import {toast} from "react-toastify";
 
 const Login = () => {
     const [username, setUsername] = useState("")
@@ -16,7 +17,6 @@ const Login = () => {
 
     async function handleSubmit(e) {
         e.preventDefault()
-        console.log({username, password})
         setLoading(true)
         const res = await signIn('credentials', {
             username,
@@ -25,9 +25,11 @@ const Login = () => {
         })
         setLoading(false)
         if (!res.error){
+            toast('Success', {type: 'success'})
             router.push('/profile')
+        } else {
+            toast(res.error, {type: "error"})
         }
-        console.log(res)
     }
 
     return (
@@ -78,7 +80,6 @@ export default Login
 export const getServerSideProps = async ({req}) => {
     const session = await getSession({req})
 
-    console.log(session)
     if (session !== null){
         return {
             redirect: {

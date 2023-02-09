@@ -1,4 +1,3 @@
-import verifyJwt from "../../../middlewares/verifyJwt";
 import prisma from "../../../lib/prisma";
 import {getSession} from "next-auth/react";
 

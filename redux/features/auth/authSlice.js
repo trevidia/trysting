@@ -29,14 +29,12 @@ function loginReducer(state, action){
     state.user = action.payload.user
     state.token = action.payload.accessToken
     state.error = ""
-    console.log(state.user, state.token)
 }
 
 function loginFailedReducer (state, action){
     state.loading = false
     state.user = null
     state.token = ""
-    console.log(action)
     state.error = action.error.message
 }
 

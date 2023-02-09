@@ -1,17 +1,21 @@
-import prisma from "../../../lib/prisma";
+import prisma from "../../../../lib/prisma";
 
 export default async function handler(req, res) {
     try {
-        console.log(req.method)
         switch (req.method) {
             case "GET":
-                const username = req.query.username
+                const username = req.query.user
+
+                // gets user from the database
+
                 const user = await prisma.user.findUnique({
                     where: {
                         username
                     }
                 })
                 let available = false
+                // condition to check if a user is available
+                // then sends it as response
                 if (user){
                     available = true
                 }

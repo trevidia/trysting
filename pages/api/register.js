@@ -1,8 +1,5 @@
 import bcrypt from 'bcrypt';
 import prisma from "../../lib/prisma";
-import jwt from "jsonwebtoken"
-import {createTokens} from "../../lib/auth";
-import CorsMiddleware from "../../middlewares/corsMiddleware";
 
 export default async function handler(req, res) {
     try {
@@ -27,7 +24,6 @@ export default async function handler(req, res) {
             }
 
         })
-        console.log(oldUsers)
 
         if (oldUsers.length >= 1) return res.status(409).json({message: "User Already exist change username or email"})
 

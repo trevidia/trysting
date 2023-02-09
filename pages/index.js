@@ -30,7 +30,6 @@ export default Home
 export const getServerSideProps = async ({req}) => {
     const session = await getSession({req})
 
-    console.log(session)
     if (session !== null){
         return {
             redirect: {

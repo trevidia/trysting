@@ -1,5 +1,4 @@
 import prisma from "../../../lib/prisma";
-import verifyJwt from "../../../middlewares/verifyJwt";
 import {getSession} from "next-auth/react";
 
 const Messages = async (req, res)=>{
