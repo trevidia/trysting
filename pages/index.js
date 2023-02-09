@@ -1,4 +1,5 @@
 import Link from "next/link";
+import {getSession} from "next-auth/react";
 
 const Home = () => {
     return (
@@ -25,3 +26,20 @@ const Home = () => {
 }
 
 export default Home
+
+export const getServerSideProps = async ({req}) => {
+    const session = await getSession({req})
+
+    if (session !== null){
+        return {
+            redirect: {
+                destination: '/profile',
+                permanent: false
+            }
+        }
+    }
+
+    return {
+        props: {}
+    }
+}

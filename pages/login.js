@@ -5,32 +5,39 @@ import {useRouter} from "next/router";
 import {useDispatch, useSelector} from "react-redux";
 import {authLogin} from "../redux/features/auth/authSlice";
 import Spinner from "../components/Spinner";
+import {getSession, signIn} from "next-auth/react";
+import {toast} from "react-toastify";
 
 const Login = () => {
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
     const router = useRouter()
-    const dispatch = useDispatch()
-    const auth = useSelector(state => state.auth)
+    const [loading, setLoading] = useState(false)
 
-    useEffect(()=>{
-        if (auth.user !== null){
-            router.push('/profile').then(r => console.log(r))
+
+    async function handleSubmit(e) {
+        e.preventDefault()
+        setLoading(true)
+        const res = await signIn('credentials', {
+            username,
+            password,
+            redirect: false
+        })
+        setLoading(false)
+        if (!res.error){
+            toast('Success', {type: 'success'})
+            router.push('/profile')
+        } else {
+            toast(res.error, {type: "error"})
         }
-    }, [auth.user])
-
-    if (auth.user) return <Spinner/>
+    }
 
     return (
         <div className={"w-full "}>
             <BackButton/>
-            <form onSubmit={async (e) => {
-                e.preventDefault()
-                console.log({username, password})
-                dispatch(authLogin({username, password}))
-            }}>
+            <form onSubmit={handleSubmit}>
                 {
-                    auth.loading && <Spinner/>
+                    loading && <Spinner/>
                 }
                 <h3 className={"text-3xl text-center mb-5"}>Login</h3>
                 <div className={"flex flex-col w-full mb-5"}>
@@ -62,7 +69,6 @@ const Login = () => {
                 <button className={'btn w-full'}>
                     Submit
                 </button>
-                {auth.error && <div className={"text-center mt-1.5 text-red-500"}>{auth.error}</div>}
             </form>
         </div>
     )
@@ -71,22 +77,19 @@ const Login = () => {
 
 export default Login
 
-// export const getServerSideProps = ({req}) => {
-//     const {isLoggedIn} = req.cookies
-//     console.log(isLoggedIn, "logged in")
-//
-//     if (isLoggedIn){
-//         return {
-//             redirect: {
-//                 destination: '/profile',
-//                 permanent: false
-//             }
-//         }
-//     }
-//
-//     return {
-//         props: {
-//
-//         }
-//     }
-// }
+export const getServerSideProps = async ({req}) => {
+    const session = await getSession({req})
+
+    if (session !== null){
+        return {
+            redirect: {
+                destination: '/profile',
+                permanent: false
+            }
+        }
+    }
+
+    return {
+        props: {}
+    }
+}
