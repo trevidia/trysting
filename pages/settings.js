@@ -6,6 +6,7 @@ import username from "./[username]";
 import axios from "../lib/axios";
 import {toast} from "react-toastify";
 import Spinner from "../components/Spinner";
+import {usernameValidation} from "../lib/utils";
 
 const Settings = () => {
     const [settings, setSettings] = useState({
@@ -44,18 +45,23 @@ const Settings = () => {
                             <button
                                 className={'btn rounded-md'}
                                 onClick={()=>{
-                                    setLoading(true)
-                                    axios.post(`/users/${session.user.id}/username`, {username: settings.username})
-                                        .then((res)=>{
-                                            toast(res.data.message, {type: "success"})
-                                            setLoading(false)
-                                            setEdit('')
-                                        })
-                                        .catch((err)=> {
-                                            console.log(err)
-                                            toast(err.response.data.message, {type: "error"})
-                                            setLoading(false)
-                                        })
+                                    if (!usernameValidation(settings.username)){
+                                        toast('Invalid Username, Input a valid username', {type: "warning"})
+                                    } else {
+                                        setLoading(true)
+                                        axios.post(`/users/${session.user.id}/username`, {username: settings.username})
+                                            .then((res)=>{
+                                                toast(res.data.message, {type: "success"})
+                                                setLoading(false)
+                                                setSettings({...settings, username: ""})
+                                                setEdit('')
+                                            })
+                                            .catch((err)=> {
+                                                console.log(err)
+                                                toast(err.response.data.message, {type: "error"})
+                                                setLoading(false)
+                                            })
+                                    }
                                 }}
                             >
                                 Submit
@@ -98,6 +104,9 @@ const Settings = () => {
                                         .then((res)=>{
                                             toast(res.data.message, {type: "success"})
                                             setLoading(false)
+                                            setSettings(prevState => {
+                                                return{...prevState, password: ""}
+                                            })
                                             setEdit('')
                                         })
                                         .catch((err)=> {

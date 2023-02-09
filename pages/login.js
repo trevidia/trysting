@@ -3,10 +3,11 @@ import Link from "next/link";
 import BackButton from "../components/BackButton";
 import {useRouter} from "next/router";
 import {useDispatch, useSelector} from "react-redux";
-import {authLogin} from "../redux/features/auth/authSlice";
+import {authLogin, authRegister} from "../redux/features/auth/authSlice";
 import Spinner from "../components/Spinner";
 import {getSession, signIn} from "next-auth/react";
 import {toast} from "react-toastify";
+import {usernameValidation} from "../lib/utils";
 
 const Login = () => {
     const [username, setUsername] = useState("")
@@ -17,19 +18,24 @@ const Login = () => {
 
     async function handleSubmit(e) {
         e.preventDefault()
-        setLoading(true)
-        const res = await signIn('credentials', {
-            username,
-            password,
-            redirect: false
-        })
-        setLoading(false)
-        if (!res.error){
-            toast('Success', {type: 'success'})
-            router.push('/profile')
-        } else {
-            toast(res.error, {type: "error"})
+        if (!usernameValidation(username)){
+            toast('Invalid Username', {type: "warning"})
+        }else {
+            setLoading(true)
+            const res = await signIn('credentials', {
+                username,
+                password,
+                redirect: false
+            })
+            setLoading(false)
+            if (!res.error){
+                toast('Success', {type: 'success'})
+                router.push('/profile')
+            } else {
+                toast(res.error, {type: "error"})
+            }
         }
+
     }
 
     return (

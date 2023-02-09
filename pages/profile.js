@@ -6,10 +6,12 @@ import {getSession, signOut} from "next-auth/react";
 import axios, {axiosPrivate} from "../lib/axios";
 import {getCookie} from "../lib/utils";
 import {toast} from "react-toastify";
+import {useDispatch} from "react-redux";
 
 
 const Profile = ({unreadMessages, username}) => {
     const router = useRouter()
+    const dispatch = useDispatch()
 
     const handleCopy = async () => {
         await navigator.clipboard.writeText(`${process.env.NEXT_PUBLIC_APP_URL}/${username}`).then(()=>{
@@ -53,6 +55,7 @@ const Profile = ({unreadMessages, username}) => {
                     </div>
                 </Link>
                 <div className={"profile-btn logout text-zinc-700"} onClick={()=> {
+                    dispatch(logout())
                     signOut({redirect: false}).then(()=>{
                         toast("Logged Out Success", {type: "success"})
                         router.push('/login')

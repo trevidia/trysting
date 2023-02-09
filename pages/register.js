@@ -6,74 +6,91 @@ import {authRegister} from "../redux/features/auth/authSlice";
 import {useRouter} from "next/router";
 import axios from "../lib/axios";
 import {getSession, signIn} from "next-auth/react";
+import Spinner from "../components/Spinner";
+import {toast} from "react-toastify";
+import {usernameValidation} from "../lib/utils";
 
 const Register = () => {
     const [email, setEmail] = useState("")
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
+    const [loading, setLoading] = useState(false)
     const dispatch = useDispatch()
     const auth = useSelector(state => state.auth)
     const router = useRouter()
 
     useEffect(()=>{
         const login = async () => {
+
             if (auth.user) {
+                setLoading(true)
                 const result = await signIn("credentials", {username, password, redirect: false})
                 if (!result.error) {
+                    toast('Success', {type: "success"})
                     router.push('/profile')
+                } else {
+                    toast(result.error, {type: "error"})
                 }
+                setLoading(false)
             }
         }
         login()
     }, [auth])
 
     return (
-        <div className={"w-full overflow-y-auto scrollbar"}>
-            <form onSubmit={(e)=>{
-                e.preventDefault()
-                dispatch(authRegister({email, username, password}))
-            }}>
-                <BackButton/>
-                <h3 className={"text-3xl text-center mb-5"}>Register</h3>
-                <div className={"flex flex-col w-full mb-5"}>
+        <>
+            {auth.loading || loading && <Spinner/>}
+            <div className={"w-full overflow-y-auto scrollbar"}>
+                <form onSubmit={(e)=>{
+                    e.preventDefault()
+                    if (!usernameValidation(username)){
+                        toast('Invalid Username', {type: "warning"})
+                    }else {
+                        dispatch(authRegister({email, username, password}))
+                    }
+                }}>
+                    <BackButton/>
+                    <h3 className={"text-3xl text-center mb-5"}>Register</h3>
+                    <div className={"flex flex-col w-full mb-5"}>
                 <span className={"text-xl mb-3"}>
                     Email
                 </span>
-                    <input
-                        className={"input"}
-                        type={"email"} required={true} value={email} onChange={(event) => {
-                        setEmail(event.target.value)
-                    }}/>
-                </div>
-                <div className={"flex flex-col w-full mb-5"}>
+                        <input
+                            className={"input"}
+                            type={"email"} required={true} value={email} onChange={(event) => {
+                            setEmail(event.target.value)
+                        }}/>
+                    </div>
+                    <div className={"flex flex-col w-full mb-5"}>
                 <span className={"text-xl mb-3"}>
                     Username
                 </span>
-                    <input
-                        className={"input"}
-                        type={"text"} required={true} value={username} onChange={(event) => {
-                        setUsername(event.target.value)
-                    }}/>
-                </div>
-                <div className={"flex flex-col w-full mb-5"}>
+                        <input
+                            className={"input"}
+                            type={"text"} required={true} value={username} onChange={(event) => {
+                            setUsername(event.target.value)
+                        }}/>
+                    </div>
+                    <div className={"flex flex-col w-full mb-5"}>
                 <span className={"text-xl mb-2.5"}>
                     Password
                 </span>
-                    <input
-                        className={"input"}
-                        type={"password"} required={true} value={password} onChange={(event) => {
-                        setPassword(event.target.value)
-                    }}/>
-                </div>
-                <div className={"text-right mb-2.5"}>
-                    Have an account already? <span className={' text-cyan-700'}><Link href={"login"}> Sign In</Link></span>
-                </div>
-                <button className={'btn w-full'}>
-                    Submit
-                </button>
-                {auth.error && <div className={"text-center mt-1.5 text-red-500"}>{auth.error}</div>}
-            </form>
-        </div>
+                        <input
+                            className={"input"}
+                            type={"password"} required={true} value={password} onChange={(event) => {
+                            setPassword(event.target.value)
+                        }}/>
+                    </div>
+                    <div className={"text-right mb-2.5"}>
+                        Have an account already? <span className={' text-cyan-700'}><Link href={"login"}> Sign In</Link></span>
+                    </div>
+                    <button className={'btn w-full'}>
+                        Submit
+                    </button>
+                    {auth.error && <div className={"text-center mt-1.5 text-red-500"}>{auth.error}</div>}
+                </form>
+            </div>
+        </>
     )
 }
 
