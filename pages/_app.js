@@ -4,8 +4,13 @@ import {Provider} from "react-redux";
 import store from "../redux/app/store";
 import {SessionProvider} from "next-auth/react";
 import {ToastContainer} from "react-toastify";
+import {useEffect} from "react";
 
 export default function App({ Component, pageProps }) {
+  useEffect(()=>{
+    const adsbygoogle = window.adsbygoogle || [];
+    adsbygoogle.push({})
+  },[])
   return <SessionProvider session={pageProps.session}>
     {/* for the redux tool kit*/}
     <Provider store={store}>
