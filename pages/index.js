@@ -18,7 +18,7 @@ const Home = () => {
                         Sign in
                     </div>
                 </Link>
-                <div className={'w-full'}>
+                <div className={'w-full absolute bottom-0'}>
                     <ins className="adsbygoogle"
                          style={{display: "block"}}
                          data-ad-format="fluid"
